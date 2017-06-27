@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<table class="table  table-striped">
+<thead>
+<tr>
+	<th>Reservation ID</th>
+    <th>Equipment</th>
+    <th>Taken By</th>
+    <th>Purpose</th>
+	<th>Temp. Location</th>
+	<th>Date Taken</th>
+	<th>Date Returned</th>
+</tr>
+</thead>
+<tbody>
+{% for reservation in my_reservations %}
+<tr>
+	<td>{{ reservation.id }}</td>
+    <td>{{ reservation.equipment }}</td>
+    <td>{{ reservation.taken_by }}</td>
+    <td>{{ reservation.purpose }}</td>
+	<td>{{ reservation.temp_location }}</td>
+	<td>{{ reservation.date_taken }}</td>
+	<td>{{ reservation.date_returned }}</td>
+ </tr>
+{% endfor %}
+</tbody>
+</table>
+<a class="btn btn-primary" href="{% url 'home' %}">Home</a>
+<a class="btn btn-primary" href="{% url 'logout' %}">Log Out</a>
+{% endblock %}

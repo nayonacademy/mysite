@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+<table class="table  table-striped" id="example">
+<thead>
+<tr>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Location</th>
+    <th>Class</th>
+    <th>Image</th>
+    <th>Manual</th>
+    <th></th>
+</tr>
+</thead>
+<tbody>
+{% for equipment in my_equipments %}
+<tr>
+    <td>{{ equipment.name }}</td>
+    <td>{{ equipment.description }}</td>
+    <td>{{ equipment.location }}</td>
+    <td>{{ equipment.category }}</td>
+    <td><img src="{{ equipment.equipimage.url }}" alt="" width="50"></td>
+    <td><a href="{{ equipment.usermanual.url }}">Manual</a></td>
+    <td>
+        {% if equipment.status == 1 %}
+        <a  class="btn btn-primary" href="">Make Reservation</a>
+        {% else %}
+        <a  class="btn btn-primary" href="">Reserved</a>
+        {% endif %}
+    </td>
+ </tr>
+{% endfor %}
+</tbody>
+</table>
+<br>
+<br>
+<a class="btn btn-primary" href="{% url 'home' %}">Home</a>
+<a class="btn btn-primary" href="{% url 'my_usage' %}">Make Reservation</a>
+<a class="btn btn-primary" href="{% url 'logout' %}">Log Out</a>
+{% endblock %}
