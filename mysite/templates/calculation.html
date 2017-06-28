@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<table class="table  table-striped">
+<thead>
+<tr>
+    <th>Equipment Name</th>
+    <th>Price </th>
+    <th>Total Time</th>
+
+</tr>
+</thead>
+<tbody>
+
+<tr>
+    <td>{{ cal.first.equipment }}</td>
+    <td></td>
+    <td>{{ totaltime }}</td>
+
+ </tr>
+
+</tbody>
+</table>
+<br>
+<br>
+{% include 'menu.html' %}
+{% endblock %}

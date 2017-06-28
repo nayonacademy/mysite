@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+<form action="" method="POST">
+     {% csrf_token %}
+    <p><label for="">Select Equipment</label> <br>
+    <select name="equipid" id="">
+        <option value="">Select Equipment</option>
+        {% for i in equip %}
+        <option value="{{i.id}}">{{i.name}}</option>
+        {% endfor %}
+    </select>
+</p>
+    <br>
+    <input type="submit" class="btn bg-primary" value="Show Report">
+</form>
+<br>
+<br>
+{% include 'menu.html' %}
+{% endblock %}

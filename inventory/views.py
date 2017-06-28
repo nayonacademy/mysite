@@ -1,17 +1,19 @@
 from datetime import timezone, date, datetime
 
 from django.contrib.auth.models import User
+from django.db.models.aggregates import Count
 from django.http.response import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls.base import reverse
 from django.views.generic import UpdateView
 from django.shortcuts import redirect
 from django.views.generic.base import View
-
+import datetime
 from inventory.models import Equipment
 from inventory.models import DeviceUsage
 from inventory.forms import UsageForm
 from django.utils import timezone
+from datetime import timedelta
 
 def home(request):
     return render(request, 'home.html')
@@ -84,7 +86,7 @@ class BookingCalender(View):
 
 def reservedequipment(request):
     if request.method == 'GET':
-        reverrselist = DeviceUsage.objects.filter(date_returned__isnull=True)
+        reverrselist = DeviceUsage.objects.filter(date_returned__isnull=True, taken_by=request.user.pk)
         context = {
             'my_reservations': reverrselist
         }
@@ -94,8 +96,28 @@ def reservedequipment(request):
 def equipmentReturn(request,pk):
     if request.method == 'GET':
         equip = DeviceUsage.objects.filter(pk=pk).get()
-        DeviceUsage.objects.filter(pk=pk).update(date_returned=timezone.now())
+        DeviceUsage.objects.filter(pk=pk).update(date_returned=datetime.datetime.now())
         Equipment.objects.filter(id=equip.equipment_id).update(status=1)
         return HttpResponseRedirect(reverse('my_equipments'))
 
 
+def calculation(request):
+    if request.method == 'POST':
+        equipid = request.POST.get('equipid')
+        cal = DeviceUsage.objects.filter(taken_by=request.user.pk, equipment=equipid)
+        count = 0
+        for i in cal:
+            # count += (i.date_returned - i.date_taken)
+            # print(i.date_returned - i.date_taken)
+            caltime = i.date_returned - i.date_taken
+            newcal = divmod(caltime.days * 86400 + caltime.seconds, 60)
+            print(newcal[0])
+            count +=newcal[0]
+        # print(count)
+        print(str(timedelta(minutes=count))[:-3])
+        totaltime = str(timedelta(minutes=count))[:-3]
+
+        return render(request, 'calculation.html', {'cal': cal, 'totaltime': totaltime})
+    else:
+        equip = Equipment.objects.all()
+    return render(request, 'select_equipments.html', {'equip':equip})

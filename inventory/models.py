@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.utils import timezone
 from PIL import Image
+import datetime
 
 class UserProfile(models.Model):
     # This field is required.
@@ -57,7 +58,7 @@ class DeviceUsage(models.Model):
     taken_by = models.ForeignKey(User)
     purpose = models.CharField(max_length=300)
     temp_location = models.CharField(max_length=300)
-    date_taken = models.DateTimeField(default=timezone.now)
+    date_taken = models.DateTimeField(default=datetime.datetime.now())
     date_returned = models.DateTimeField(null=True, blank=True)
 
 

@@ -11,13 +11,11 @@
             <input type="text" value="{{equipment.first.name}}" readonly>
             <input type="hidden" name="equipment" value="{{equipment.first.id}}">
         </p>
-        <p><label for="id_taken_by">Taken by:</label>
-            <select name="taken_by" id="id_taken_by" required="">
-              <option value="" selected="">---------</option>
-                {% for i in user %}
-              <option value="{{i.pk}}">{{i.username}}</option>
-                {% endfor %}
-            </select>
+        <p><label>Taken by:</label>
+
+            <input type="text" value="{{ user.first.username}}" readonly>
+            <input type="hidden" value="{{ user.first.pk}}" readonly name="taken_by">
+
         </p>
         <p><label for="id_purpose">Purpose:</label>
             <input name="purpose" id="id_purpose" required="" maxlength="300" type="text">
