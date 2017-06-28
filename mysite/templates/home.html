@@ -2,8 +2,5 @@
 
 {% block content %}
 <p>Thank You for Login </p>
-<a class="btn btn-primary" href="{% url 'my_equipments' %}">Equipments List</a>
-<a class="btn btn-primary" href="{% url 'my_usage' %}">Make Reservation</a>
-<a class="btn btn-primary" href="{% url 'my_reservations' %}">Reservations Equipments</a>
-<a class="btn btn-primary" href="{% url 'logout' %}">Log Out</a>
+{% include 'menu.html' %}
 {% endblock content %}

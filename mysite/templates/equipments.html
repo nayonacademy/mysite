@@ -23,9 +23,9 @@
     <td><a href="{{ equipment.usermanual.url }}">Manual</a></td>
     <td>
         {% if equipment.status == 1 %}
-        <a  class="btn btn-primary" href="">Make Reservation</a>
+        <a  class="btn btn-primary" href="{% url 'booking_calender' pk=equipment.pk %}">Make Reservation</a>
         {% else %}
-        <a  class="btn btn-primary" href="">Reserved</a>
+        <a  class="btn btn-primary" href="" readonly>Reserved</a>
         {% endif %}
     </td>
  </tr>
@@ -34,7 +34,5 @@
 </table>
 <br>
 <br>
-<a class="btn btn-primary" href="{% url 'home' %}">Home</a>
-<a class="btn btn-primary" href="{% url 'my_usage' %}">Make Reservation</a>
-<a class="btn btn-primary" href="{% url 'logout' %}">Log Out</a>
+{% include 'menu.html' %}
 {% endblock %}

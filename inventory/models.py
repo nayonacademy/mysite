@@ -58,7 +58,7 @@ class DeviceUsage(models.Model):
     purpose = models.CharField(max_length=300)
     temp_location = models.CharField(max_length=300)
     date_taken = models.DateTimeField(default=timezone.now)
-    # date_returned = models.DateTimeField(default=timezone.now)
+    date_returned = models.DateTimeField(null=True, blank=True)
 
 
     def __str__(self):

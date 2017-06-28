@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="fullarea">
+    <div class="col-md-6">
+        <form action="" method="POST" class="form-horizontal">
+
+        {% csrf_token %}
+        <p><label>Equipment:</label>
+            <input type="text" value="{{equipment.first.name}}" readonly>
+            <input type="hidden" name="equipment" value="{{equipment.first.id}}">
+        </p>
+        <p><label for="id_taken_by">Taken by:</label>
+            <select name="taken_by" id="id_taken_by" required="">
+              <option value="" selected="">---------</option>
+                {% for i in user %}
+              <option value="{{i.pk}}">{{i.username}}</option>
+                {% endfor %}
+            </select>
+        </p>
+        <p><label for="id_purpose">Purpose:</label>
+            <input name="purpose" id="id_purpose" required="" maxlength="300" type="text">
+        </p>
+        <p><label for="id_temp_location">Temp location:</label>
+            <input name="temp_location" id="id_temp_location" required="" maxlength="300" type="text">
+        </p>
+        <!--<p><label for="id_date_taken">Date taken:</label>-->
+            <!--<input name="date_taken" value="2017-06-28 08:40:24" id="id_date_taken" required="" type="text">-->
+        <!--</p>-->
+        <button type="submit" class="btn btn-default">Make Reservation</button>
+    </form>
+        <br />
+        <br />
+
+    </div>
+    <div class="col-md-6">
+        calender
+    </div>
+    <div class="clear-fix"></div>
+</div>
+<br>
+
+{% include 'menu.html' %}
+{% endblock %}
