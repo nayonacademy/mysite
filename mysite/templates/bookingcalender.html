@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="fullarea">
-    <div class="col-md-6">
+    <div class="col-md-5">
         <form action="" method="POST" class="form-horizontal">
 
         {% csrf_token %}
@@ -32,12 +32,33 @@
         <br />
 
     </div>
-    <div class="col-md-6">
-        calender
+    <div class="col-md-7">
+        <div id='calendar'></div>
+
+<!--{{fullbooking}}-->
+        <br>
+
     </div>
     <div class="clear-fix"></div>
 </div>
 <br>
+<script>
+    $(document).ready(function() {
 
+    // page is now ready, initialize the calendar...
+var onejson = "{'start': '2017-06-07'}";
+console.log(onejson);
+    $('#calendar').fullCalendar({
+        // put your options and callbacks here
+          events: {
+        url: "{% url 'jsondataget' %}",
+        cache: true,
+        background: 'yellow',
+    }
+
+    })
+
+});
+</script>
 {% include 'menu.html' %}
 {% endblock %}

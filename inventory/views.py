@@ -1,5 +1,5 @@
 from datetime import timezone, date, datetime
-
+import json
 from django.contrib.auth.models import User
 from django.db.models.aggregates import Count
 from django.http.response import HttpResponseRedirect, HttpResponse
@@ -14,6 +14,7 @@ from inventory.models import DeviceUsage
 from inventory.forms import UsageForm
 from django.utils import timezone
 from datetime import timedelta
+from django.core import serializers
 
 def home(request):
     return render(request, 'home.html')
@@ -62,10 +63,30 @@ class BookingCalender(View):
     def get(self, request, *args, **kwargs):
         pk = self.kwargs['pk']
         equipment = Equipment.objects.filter(pk=pk)
+        booking = DeviceUsage.objects.filter(equipment=pk)
+
+        fullbooking = ''
+        for i in booking:
+            # newstr = '{"start":'+'"'+str(i.date_taken)+'",'+'"end":'+'"'+str(i.date_returned)+'"'+'},'
+            # newstr = "{'start':"+"'"+str(i.date_taken)+"',"+"'end':"+"'"+str(i.date_returned)+"'"+"},"
+            newstr = {
+                'start': str(i.date_taken),
+                'end': str(i.date_returned),
+            },
+
+            print(newstr)
+            # fullbooking += newstr
+            # print("{start: '2017-06-07',end: '2017-06-10'},")
+        # print(fullbooking[0:-1])
+        # newbookin = fullbooking[0:-1]
+        # bookingjson = "["+newbookin+"]"
+        print(DeviceUsage.objects.values('date_taken').all())
+
         user = User.objects.all()
         context = {
             'equipment': equipment,
-            'user': user
+            'user': user,
+            'fullbooking': fullbooking,
         }
         return render(request, self.template_name, context)
 
@@ -107,17 +128,19 @@ def calculation(request):
         cal = DeviceUsage.objects.filter(taken_by=request.user.pk, equipment=equipid)
         count = 0
         for i in cal:
-            # count += (i.date_returned - i.date_taken)
-            # print(i.date_returned - i.date_taken)
             caltime = i.date_returned - i.date_taken
             newcal = divmod(caltime.days * 86400 + caltime.seconds, 60)
             print(newcal[0])
             count +=newcal[0]
-        # print(count)
-        print(str(timedelta(minutes=count))[:-3])
         totaltime = str(timedelta(minutes=count))[:-3]
 
         return render(request, 'calculation.html', {'cal': cal, 'totaltime': totaltime})
     else:
         equip = Equipment.objects.all()
     return render(request, 'select_equipments.html', {'equip':equip})
+
+
+def jsondataget(request):
+    if request.method == "GET":
+        return render(request, 'events.json')
+
