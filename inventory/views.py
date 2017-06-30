@@ -115,7 +115,7 @@ def calculation(request):
         cal = DeviceUsage.objects.filter(taken_by=request.user.pk, equipment=equipid)
         count = 0
         for i in cal:
-            caltime = i.end - i.start
+            caltime = i.start - i.end
             newcal = divmod(caltime.days * 86400 + caltime.seconds, 60)
             print(newcal[0])
             count +=newcal[0]

@@ -31,6 +31,7 @@ class CategoryEquipment(models.Model):
 
 
 class DeviceLocation(models.Model):
+    campus = models.CharField(max_length=45, default='')
     room = models.CharField(max_length=50)
     wall_cabinet = models.CharField(max_length=50)
     shelf = models.PositiveSmallIntegerField()
@@ -45,6 +46,7 @@ class Equipment(models.Model):
     description = models.CharField(max_length=1000)
     location = models.ForeignKey(DeviceLocation, null=True)
     category = models.ForeignKey(CategoryEquipment, default='')
+    price = models.PositiveSmallIntegerField(default=0)
     equipimage = models.ImageField(upload_to='pic_folder/', default='pic_folder/demo.jpg')
     usermanual = models.FileField(upload_to='pdf/%Y/%m/%d', default='')
     status = models.IntegerField(default=1)
