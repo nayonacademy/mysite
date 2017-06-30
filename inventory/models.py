@@ -60,9 +60,9 @@ class DeviceUsage(models.Model):
     taken_by = models.ForeignKey(User)
     purpose = models.CharField(max_length=300)
     temp_location = models.CharField(max_length=300)
-    start = models.DateTimeField(default=datetime.datetime.now())
+    start = models.DateTimeField(null=True, blank=True)
     end = models.DateTimeField(null=True, blank=True)
-
+    status = models.BooleanField(default=1)
 
     def __str__(self):
         return '[Equipment: %s]' % (self.equipment)

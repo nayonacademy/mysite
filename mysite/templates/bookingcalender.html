@@ -3,6 +3,7 @@
 
 {% block content %}
 <div class="fullarea">
+    <div class="row">
     <div class="col-md-5">
         <form action="" method="POST" class="form-horizontal">
 
@@ -23,9 +24,17 @@
         <p><label for="id_temp_location">Temp location:</label>
             <input name="temp_location" id="id_temp_location" required="" maxlength="300" type="text">
         </p>
-        <!--<p><label for="id_date_taken">Date taken:</label>-->
-            <!--<input name="date_taken" value="2017-06-28 08:40:24" id="id_date_taken" required="" type="text">-->
-        <!--</p>-->
+        <p><label>Date taken:</label>
+            <div class="input-group date" id="datetimepicker1" style="width: 70%;">
+                <input type="text" name="start" class="form-control" />	<span class="input-group-addon"><span class="glyphicon-calendar glyphicon"></span></span>
+            </div>
+        </p>
+            <p><label>Return:</label>
+            <div class="input-group date" id="datetimepicker2" style="width: 70%;">
+                <input type="text" name="end" class="form-control" />	<span class="input-group-addon"><span class="glyphicon-calendar glyphicon"></span></span>
+            </div>
+        </p>
+
         <button type="submit" class="btn btn-default">Make Reservation</button>
     </form>
         <br />
@@ -39,6 +48,7 @@
         <br>
 
     </div>
+        </div>
     <div class="clear-fix"></div>
 </div>
 <br>
@@ -53,12 +63,21 @@ console.log(onejson);
           events: {
         url: "{% url 'booking_api' pk=equipment.first.pk %}",
         cache: true,
-        background: 'yellow',
+        background: 'yellow'
     }
 
-    })
+    });
 
 });
+
+var options = {
+    format: 'YYYY-MM-DD HH:mm:ss',
+    defaultDate: moment('2017-06-01'),
+    useCurrent:'day'
+};
+
+$('#datetimepicker1').datetimepicker(options);
+$('#datetimepicker2').datetimepicker(options);
 </script>
 {% include 'menu.html' %}
 {% endblock %}

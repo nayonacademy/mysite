@@ -86,15 +86,17 @@ class BookingCalender(View):
         purpose = request.POST.get('purpose')
         temp_location = request.POST.get('temp_location')
         equipment_id = request.POST.get('equipment')
+        start = request.POST.get('start')
+        end = request.POST.get('end')
 
-        DeviceUsage.objects.create(purpose=purpose,temp_location=temp_location,equipment_id=equipment_id,taken_by_id=user_id)
+        DeviceUsage.objects.create(purpose=purpose,temp_location=temp_location,equipment_id=equipment_id,taken_by_id=user_id, start=start, end=end)
         Equipment.objects.filter(id=equipment_id).update(status=0)
         return HttpResponseRedirect(reverse('my_equipments'))
 
 
 def reservedequipment(request):
     if request.method == 'GET':
-        reverrselist = DeviceUsage.objects.filter(end__isnull=True, taken_by=request.user.pk)
+        reverrselist = DeviceUsage.objects.filter(status=True, taken_by=request.user.pk)
         context = {
             'my_reservations': reverrselist
         }
@@ -104,7 +106,7 @@ def reservedequipment(request):
 def equipmentReturn(request,pk):
     if request.method == 'GET':
         equip = DeviceUsage.objects.filter(pk=pk).get()
-        DeviceUsage.objects.filter(pk=pk).update(end=datetime.datetime.now())
+        DeviceUsage.objects.filter(pk=pk).update(status=0)
         Equipment.objects.filter(id=equip.equipment_id).update(status=1)
         return HttpResponseRedirect(reverse('my_equipments'))
 
@@ -115,7 +117,7 @@ def calculation(request):
         cal = DeviceUsage.objects.filter(taken_by=request.user.pk, equipment=equipid)
         count = 0
         for i in cal:
-            caltime = i.start - i.end
+            caltime = i.end - i.start
             newcal = divmod(caltime.days * 86400 + caltime.seconds, 60)
             print(newcal[0])
             count +=newcal[0]

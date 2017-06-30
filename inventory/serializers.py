@@ -18,5 +18,5 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 class DeviceUsageSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = DeviceUsage
-        fields = ('start',)
+        fields = ('start','end')
 

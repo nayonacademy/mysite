@@ -22,11 +22,12 @@
     <td><img src="{{ equipment.equipimage.url }}" alt="" width="50"></td>
     <td><a href="{{ equipment.usermanual.url }}">Manual</a></td>
     <td>
-        {% if equipment.status == 1 %}
+        <!--{% if equipment.status == 1 %}-->
+        <!--<a  class="btn btn-primary" href="{% url 'booking_calender' pk=equipment.pk %}">Make Reservation</a>-->
+        <!--{% else %}-->
+        <!--<button class="btn btn-primary">Reserved</button>-->
+        <!--{% endif %}-->
         <a  class="btn btn-primary" href="{% url 'booking_calender' pk=equipment.pk %}">Make Reservation</a>
-        {% else %}
-        <button class="btn btn-primary">Reserved</button>
-        {% endif %}
     </td>
  </tr>
 {% endfor %}
