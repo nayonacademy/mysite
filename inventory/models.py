@@ -58,11 +58,13 @@ class DeviceUsage(models.Model):
     taken_by = models.ForeignKey(User)
     purpose = models.CharField(max_length=300)
     temp_location = models.CharField(max_length=300)
-    date_taken = models.DateTimeField(default=datetime.datetime.now())
-    date_returned = models.DateTimeField(null=True, blank=True)
+    start = models.DateTimeField(default=datetime.datetime.now())
+    end = models.DateTimeField(null=True, blank=True)
 
 
     def __str__(self):
         return '[Equipment: %s]' % (self.equipment)
 
 
+    # date_taken = models.DateTimeField(default=datetime.datetime.now())
+    # date_returned = models.DateTimeField(null=True, blank=True)

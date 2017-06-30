@@ -51,7 +51,7 @@ console.log(onejson);
     $('#calendar').fullCalendar({
         // put your options and callbacks here
           events: {
-        url: "{% url 'jsondataget' %}",
+        url: "{% url 'booking_api' pk=equipment.first.pk %}",
         cache: true,
         background: 'yellow',
     }

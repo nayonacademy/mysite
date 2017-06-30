@@ -20,7 +20,7 @@
     <td>{{ reservation.taken_by }}</td>
     <td>{{ reservation.purpose }}</td>
 	<td>{{ reservation.temp_location }}</td>
-	<td>{{ reservation.date_taken }}</td>
+	<td>{{ reservation.start }}</td>
 	<td><a class="btn btn-default" href="{% url 'equipmentReturn' pk=reservation.pk %}">Return</a></td>
  </tr>
 {% endfor %}

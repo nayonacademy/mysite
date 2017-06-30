@@ -1,6 +1,6 @@
 from datetime import timezone, date, datetime
 import json
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.db.models.aggregates import Count
 from django.http.response import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404
@@ -9,12 +9,18 @@ from django.views.generic import UpdateView
 from django.shortcuts import redirect
 from django.views.generic.base import View
 import datetime
+
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from inventory.models import Equipment
 from inventory.models import DeviceUsage
 from inventory.forms import UsageForm
 from django.utils import timezone
 from datetime import timedelta
 from django.core import serializers
+from rest_framework import viewsets
+from .serializers import *
 
 def home(request):
     return render(request, 'home.html')
@@ -64,29 +70,10 @@ class BookingCalender(View):
         pk = self.kwargs['pk']
         equipment = Equipment.objects.filter(pk=pk)
         booking = DeviceUsage.objects.filter(equipment=pk)
-
-        fullbooking = ''
-        for i in booking:
-            # newstr = '{"start":'+'"'+str(i.date_taken)+'",'+'"end":'+'"'+str(i.date_returned)+'"'+'},'
-            # newstr = "{'start':"+"'"+str(i.date_taken)+"',"+"'end':"+"'"+str(i.date_returned)+"'"+"},"
-            newstr = {
-                'start': str(i.date_taken),
-                'end': str(i.date_returned),
-            },
-
-            print(newstr)
-            # fullbooking += newstr
-            # print("{start: '2017-06-07',end: '2017-06-10'},")
-        # print(fullbooking[0:-1])
-        # newbookin = fullbooking[0:-1]
-        # bookingjson = "["+newbookin+"]"
-        print(DeviceUsage.objects.values('date_taken').all())
-
         user = User.objects.all()
         context = {
             'equipment': equipment,
             'user': user,
-            'fullbooking': fullbooking,
         }
         return render(request, self.template_name, context)
 
@@ -107,7 +94,7 @@ class BookingCalender(View):
 
 def reservedequipment(request):
     if request.method == 'GET':
-        reverrselist = DeviceUsage.objects.filter(date_returned__isnull=True, taken_by=request.user.pk)
+        reverrselist = DeviceUsage.objects.filter(end__isnull=True, taken_by=request.user.pk)
         context = {
             'my_reservations': reverrselist
         }
@@ -117,7 +104,7 @@ def reservedequipment(request):
 def equipmentReturn(request,pk):
     if request.method == 'GET':
         equip = DeviceUsage.objects.filter(pk=pk).get()
-        DeviceUsage.objects.filter(pk=pk).update(date_returned=datetime.datetime.now())
+        DeviceUsage.objects.filter(pk=pk).update(end=datetime.datetime.now())
         Equipment.objects.filter(id=equip.equipment_id).update(status=1)
         return HttpResponseRedirect(reverse('my_equipments'))
 
@@ -128,7 +115,7 @@ def calculation(request):
         cal = DeviceUsage.objects.filter(taken_by=request.user.pk, equipment=equipid)
         count = 0
         for i in cal:
-            caltime = i.date_returned - i.date_taken
+            caltime = i.end - i.start
             newcal = divmod(caltime.days * 86400 + caltime.seconds, 60)
             print(newcal[0])
             count +=newcal[0]
@@ -144,3 +131,31 @@ def jsondataget(request):
     if request.method == "GET":
         return render(request, 'events.json')
 
+
+# REST API SECTION
+class UserViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = User.objects.all().order_by('-date_joined')
+    serializer_class = UserSerializer
+
+
+class GroupViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
+
+
+class DeviceUsageAPI(APIView):
+    """
+    List all snippets, or create a new snippet.
+    """
+    def get(self, request, format=None, *args, **kwargs):
+        pk = self.kwargs['pk']
+        client = DeviceUsage.objects.filter(equipment=pk)
+        serializer = DeviceUsageSerializer(client, many=True)
+        print(serializer)
+        return Response(serializer.data)

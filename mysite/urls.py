@@ -26,5 +26,6 @@ urlpatterns = [
     url(r'^logout/$', views.user_logout, name='logout'),
     url(r'^admin/', admin.site.urls),
     url(r'^inventory/', include('inventory.urls'), name='home'),
+    url(r'^api/', include('inventory.api_urls'), name='api'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
