@@ -14,8 +14,8 @@
         </p>
         <p><label>Taken by:</label>
 
-            <input type="text" value="{{ user.first.username}}" readonly>
-            <input type="hidden" value="{{ user.first.pk}}" readonly name="taken_by">
+            <input type="text" value="{{ request.user.username }}" readonly>
+            <input type="hidden" value="{{ request.user.id }}" readonly name="taken_by">
 
         </p>
         <p><label for="id_purpose">Purpose:</label>

@@ -80,6 +80,7 @@ class BookingCalender(View):
 
     def post(self, request, *args, **kwargs):
         user_id = request.POST.get('taken_by')
+        user = User.objects.filter(id=user_id).get()
         # int(user_id)
         # user = User.objects.filter(id = user_id).get()
         print("User ID",user_id)
@@ -89,7 +90,7 @@ class BookingCalender(View):
         start = request.POST.get('start')
         end = request.POST.get('end')
 
-        DeviceUsage.objects.create(purpose=purpose,temp_location=temp_location,equipment_id=equipment_id,taken_by_id=user_id, start=start, end=end)
+        DeviceUsage.objects.create(purpose=purpose,temp_location=temp_location,equipment_id=equipment_id,taken_by_id=user_id, start=start, end=end, title=user.username)
         Equipment.objects.filter(id=equipment_id).update(status=0)
         return HttpResponseRedirect(reverse('my_equipments'))
 
@@ -114,7 +115,9 @@ def equipmentReturn(request,pk):
 def calculation(request):
     if request.method == 'POST':
         equipid = request.POST.get('equipid')
-        cal = DeviceUsage.objects.filter(taken_by=request.user.pk, equipment=equipid)
+        start = request.POST.get('start')
+        end = request.POST.get('end')
+        cal = DeviceUsage.objects.filter(taken_by=request.user.pk, equipment=equipid, start__range=(start, end))
         count = 0
         for i in cal:
             caltime = i.end - i.start
@@ -131,7 +134,7 @@ def calculation(request):
 
 def jsondataget(request):
     if request.method == "GET":
-        return render(request, 'events.json')
+        return render(request, '')
 
 
 # REST API SECTION
@@ -159,5 +162,4 @@ class DeviceUsageAPI(APIView):
         pk = self.kwargs['pk']
         client = DeviceUsage.objects.filter(equipment=pk)
         serializer = DeviceUsageSerializer(client, many=True)
-        print(serializer)
         return Response(serializer.data)

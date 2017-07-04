@@ -10,10 +10,30 @@
         {% endfor %}
     </select>
 </p>
+            <p><label>Start Date:</label>
+            <div class="input-group date" id="datetimepicker1" style="width: 70%;">
+                <input type="text" name="start" class="form-control" />	<span class="input-group-addon"><span class="glyphicon-calendar glyphicon"></span></span>
+            </div>
+        </p>
+            <p><label>End Date:</label>
+            <div class="input-group date" id="datetimepicker2" style="width: 70%;">
+                <input type="text" name="end" class="form-control" />	<span class="input-group-addon"><span class="glyphicon-calendar glyphicon"></span></span>
+            </div>
+        </p>
     <br>
     <input type="submit" class="btn bg-primary" value="Show Report">
 </form>
 <br>
 <br>
+<script>
+    var options = {
+    format: 'YYYY-MM-DD HH:mm:ss',
+    defaultDate: moment('2017-06-01'),
+    useCurrent:'day'
+};
+
+$('#datetimepicker1').datetimepicker(options);
+$('#datetimepicker2').datetimepicker(options);
+</script>
 {% include 'menu.html' %}
 {% endblock %}
