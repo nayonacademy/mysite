@@ -8,7 +8,7 @@ from django.urls.base import reverse
 from django.views.generic import UpdateView
 from django.shortcuts import redirect
 from django.views.generic.base import View
-import datetime
+import datetime, time
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -117,14 +117,57 @@ def calculation(request):
         equipid = request.POST.get('equipid')
         start = request.POST.get('start')
         end = request.POST.get('end')
-        cal = DeviceUsage.objects.filter(taken_by=request.user.pk, equipment=equipid, start__range=(start, end))
+        cal = DeviceUsage.objects.filter(taken_by=request.user.pk, equipment=equipid)
+        start1 = datetime.datetime.strptime(start, "%Y-%m-%d %H:%M:%S")
+        start1 = time.mktime(start1.timetuple())
+
+        end1 = datetime.datetime.strptime(end, "%Y-%m-%d %H:%M:%S")
+        end1 = time.mktime(end1.timetuple())
+
+        # print('start time :: ',datetime.datetime.strptime(start, "%Y-%m-%d %H:%M:%S"))
         count = 0
         for i in cal:
-            caltime = i.end - i.start
-            newcal = divmod(caltime.days * 86400 + caltime.seconds, 60)
-            print(newcal[0])
-            count +=newcal[0]
-        totaltime = str(timedelta(minutes=count))[:-3]
+            start = time.mktime(i.start.timetuple())
+            print('database start',start, 'input start',start1)
+            end = time.mktime(i.end.timetuple())
+            print('database end',end, 'input end', end1)
+            print('counsdfsdf',end - start)
+            if (start < start1):
+                newstart = start1
+            else:
+                newstart = start
+
+            if (end > end1):
+                newend = end1
+            else:
+                newend = end
+
+            print("newstart", newstart, "newend ", newend)
+            count += newend-newstart
+            # if (start < start1) and (end < end1):
+            #     caltime = end - start1
+            #     print(caltime)
+            #     caltime = '%g' % caltime
+            #     print(caltime)
+            # elif (start < start1) and (end > end1):
+            #     caltime = end1 - start
+            #     print(caltime)
+            #     caltime = '%g' % caltime
+            #     print(caltime)
+            # caltime = i.end - i.start
+            # caltime = end - start
+
+            # newcal = divmod(caltime.days * 86400 + caltime.seconds, 60)
+            # print('process time:: ',newcal[0])
+            # count +=newcal[0]
+        print(count)
+        minutes = count / 60
+        print(minutes)
+        hours = minutes / 60
+        print(hours)
+        days = hours / 24
+        print(days)
+        totaltime = str(timedelta(minutes=minutes))[:-3]
 
         return render(request, 'calculation.html', {'cal': cal, 'totaltime': totaltime})
     else:
