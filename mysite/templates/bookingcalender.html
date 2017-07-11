@@ -64,6 +64,14 @@ console.log(onejson);
         url: "{% url 'booking_api' pk=equipment.first.pk %}",
         cache: true,
         background: 'yellow'
+    },
+        header: { center: 'month,agendaWeek,agendaDay' }, // buttons for switching between views
+
+    views: {
+        month: { // name of view
+            titleFormat: 'YYYY, MM, DD'
+            // other view-specific options here
+        }
     }
 
     });
@@ -73,7 +81,7 @@ console.log(onejson);
 var options = {
     format: 'YYYY-MM-DD HH:mm:ss',
     defaultDate: moment('2017-06-01'),
-    useCurrent:'day'
+    useCurrent:'day',
 };
 
 $('#datetimepicker1').datetimepicker(options);
