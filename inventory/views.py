@@ -89,7 +89,7 @@ class BookingCalender(View):
         equipment_id = request.POST.get('equipment')
         start = request.POST.get('start')
         end = request.POST.get('end')
-
+        print('start time:', start, 'end time:', end)
         DeviceUsage.objects.create(purpose=purpose,temp_location=temp_location,equipment_id=equipment_id,taken_by_id=user_id, start=start, end=end, title=user.username)
         Equipment.objects.filter(id=equipment_id).update(status=0)
         return HttpResponseRedirect(reverse('my_equipments'))
@@ -117,7 +117,7 @@ def calculation(request):
         equipid = request.POST.get('equipid')
         start = request.POST.get('start')
         end = request.POST.get('end')
-        cal = DeviceUsage.objects.filter(taken_by=request.user.pk, equipment=equipid)
+        cal = DeviceUsage.objects.filter(equipment=equipid)
         start1 = datetime.datetime.strptime(start, "%Y-%m-%d %H:%M:%S")
         start1 = time.mktime(start1.timetuple())
 
@@ -144,22 +144,6 @@ def calculation(request):
 
             print("newstart", newstart, "newend ", newend)
             count += newend-newstart
-            # if (start < start1) and (end < end1):
-            #     caltime = end - start1
-            #     print(caltime)
-            #     caltime = '%g' % caltime
-            #     print(caltime)
-            # elif (start < start1) and (end > end1):
-            #     caltime = end1 - start
-            #     print(caltime)
-            #     caltime = '%g' % caltime
-            #     print(caltime)
-            # caltime = i.end - i.start
-            # caltime = end - start
-
-            # newcal = divmod(caltime.days * 86400 + caltime.seconds, 60)
-            # print('process time:: ',newcal[0])
-            # count +=newcal[0]
         print(count)
         minutes = count / 60
         print(minutes)
