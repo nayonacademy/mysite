@@ -131,26 +131,125 @@ def calculation(request):
             print('database start',start, 'input start',start1)
             end = time.mktime(i.end.timetuple())
             print('database end',end, 'input end', end1)
-            print('counsdfsdf',end - start)
-            if (start < start1):
-                newstart = start1
-            else:
-                newstart = start
+            # print('counsdfsdf',end - start)
+            # if (start > start1):
+            #     newstart = start1
+            #     print("if newstart", newstart)
+            # else:
+            #     newstart = start
+            #     print("else newstart", newstart)
+            #
+            # if (end < end1):
+            #     newend = end
+            #     print("if newend", newend)
+            # else:
+            #     newend = end1
+            #     print("else newend", newend)
 
-            if (end > end1):
-                newend = end1
-            else:
+            # if(end < start1):
+            #     newstart = 0
+            # elif(start1 > start):
+            #     newstart = start
+            # elif(start < start1):
+            #     newstart = start1
+            #
+            # newend = ''
+            # if(end1 < start):
+            #     newend = 0
+            # elif(end1 > end):
+            #     newend = end
+            # elif(end1 < end):
+            #     newend = end1
+
+
+            # if(end1 < start) and (start1 < start):
+            #     count += 0
+            #     print("1",count)
+            # elif(start1 < start) and (end1 > end):
+            #     count += end - start
+            #     print("2", count)
+            # elif(start1 < start) and (end1 < end):
+            #     count += end1 - start
+            #     print("3", count)
+            # else:
+            #     print("nno get")
+
+            # elif(start1 < start) and (end1 > end):
+            #     count += end - start
+            #     print("2",count)
+            # elif(start1 < start) and (end1 < end):
+            #     count += start -end1
+            #     print("3",count)
+            # elif(start1>start) and (end1 < end):
+            #     count += end1 - start1
+            #     print("4",count)
+            # elif(start1 > start) and (end1 > end):
+            #     count += end - start1
+            #     print("5",count)
+            newstart = 0
+            newend = 0
+
+
+            # if start1 < start:
+            #     newstart = start
+            #     print("1-")
+            # elif end1 < start:
+            #     newstart = 0
+            #     print("2-")
+            # elif start1 > start:
+            #     newstart = start1
+            #     print("3-")
+            # elif end1 < start and start1 < start:
+            #     newstart = 0
+            #     newend = 0
+            #     print("4-")
+            #
+            #
+            # if end1 > end and start1 > end:
+            #     newend = 0
+            #     newstart = 0
+            #     print("1")
+            # elif end1 < end:
+            #     newend = end1
+            #     print("2")
+            # elif end1 > end:
+            #     newend = end
+            #     print("3")
+
+            if(start1 < start) and ( end1 < start):
+                newstart = 0
+                newend = 0
+                
+            if(start1 < start) and (end1 < start):
+                newstart = 0
+                newend = 0
+            elif(start1 < start) and (end1>end):
+                newstart = start
                 newend = end
+            elif(start1 < start) and (end1 < end):
+                newstart = start
+                newend = end1
+            elif(start1 > start) and (end1 < end):
+                newstart = start1
+                newend = end1
+            elif(start1 > start) and (end1 > end):
+                newstart = start1
+                newend = end
+            elif(start1 > end) and (end1 > end):
+                newstart = 0
+                newend = 0
 
             print("newstart", newstart, "newend ", newend)
-            count += newend-newstart
-        print(count)
+            durration = newend - newstart
+            print("duration::", durration)
+            count += durration
+        # print(count)
         minutes = count / 60
-        print(minutes)
+        # print(minutes)
         hours = minutes / 60
-        print(hours)
+        # print(hours)
         days = hours / 24
-        print(days)
+        # print(days)
         totaltime = str(timedelta(minutes=minutes))[:-3]
 
         return render(request, 'calculation.html', {'cal': cal, 'totaltime': totaltime})
